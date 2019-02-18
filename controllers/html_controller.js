@@ -7,14 +7,14 @@ router.get('/', function (req, res) {
     res.render('index');
 });
 
-function testCall(res ,cb){
+function callShipStation(res ,cb){
     var authString = `${process.env.SSAPIKey}:${process.env.SSAPISecret}`; 
     var cipherString = Buffer.from(authString).toString('base64');
-    var authString = `Basic ${cipherString}`;
+    var finalAuthString = `Basic ${cipherString}`;
     var options = {
         url: 'https://ssapi.shipstation.com/orders?createDateStart=2019-02-17%2023:59:59',
         headers: {
-          Authorization: authString 
+          Authorization: finalAuthString 
         }
       };
       function callback(error, response, body) {
@@ -29,14 +29,33 @@ function testCall(res ,cb){
 }
 
 router.get('/shipments', function (req, res) {
-
-    testCall(res);
-    
-    
+    callShipStation(res);
 });
 
+function callZenDesk(res){
+    //https://clearlyfiltered.zendesk.com/api/v2/tickets/recent.json
+    var authString = `${process.env.ZDUserName}:${process.env.ZDPassword}`; 
+    var cipherString = Buffer.from(authString).toString('base64');
+    var finalAuthString = `Basic ${cipherString}`;
+    var options = {
+        url: 'https://clearlyfiltered.zendesk.com/api/v2/tickets.json',
+        headers: {
+          Authorization: finalAuthString 
+        }
+      };
+      function callback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+          var info = JSON.parse(body);
+          console.log(info);
+          res.render('tickets', info);
+        }
+      }
+      request(options, callback);
+}
+
 router.get('/tickets', function (req, res) {
-    res.render('tickets');
+    //res.render('tickets');
+    callZenDesk(res);
 });
 
 module.exports = router;
