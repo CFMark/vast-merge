@@ -9,9 +9,11 @@ app.use(express.json());
  
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
- 
+
+app.use(express.static("public"));
+
 app.get('/', function (req, res) {
-    res.render('home');
+    res.render('index');
 });
 
 models.sequelize.sync().then(function(){
