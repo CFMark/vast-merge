@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/CFMark/vast-merge/issues"
   },
-  "homepage": "https://github.com/CFMark/vast-merge#readme"
+  "homepage": "https://github.com/CFMark/vast-merge#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
