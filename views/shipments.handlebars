@@ -1,3 +1,17 @@
-{{#each orders}}
-<p>{{orderNumber}}</p>
-{{/each}}
+<table>
+    <thead>
+        <tr>
+            <th>Order #</th>
+            <th>Customer Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each orders}}
+        <tr>
+            <td>{{orderNumber}}</td>
+            <td>{{shipTo.name}}</td>
+            
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

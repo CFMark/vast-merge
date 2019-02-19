@@ -7,12 +7,18 @@ router.get('/', function (req, res) {
     res.render('index');
 });
 
+
+router.get('/', function (req, res) {
+  res.render('index');
+});
+
+
 function callShipStation(res ,cb){
     var authString = `${process.env.SSAPIKey}:${process.env.SSAPISecret}`; 
     var cipherString = Buffer.from(authString).toString('base64');
     var finalAuthString = `Basic ${cipherString}`;
     var options = {
-        url: 'https://ssapi.shipstation.com/orders?createDateStart=2019-02-17%2023:59:59',
+        url: 'https://ssapi.shipstation.com/orders?createDateStart=2019-02-18%2023:59:59',
         headers: {
           Authorization: finalAuthString 
         }
@@ -25,7 +31,6 @@ function callShipStation(res ,cb){
         }
       }
       request(options, callback);
-      
 }
 
 router.get('/shipments', function (req, res) {
@@ -33,7 +38,6 @@ router.get('/shipments', function (req, res) {
 });
 
 function callZenDesk(res){
-    //https://clearlyfiltered.zendesk.com/api/v2/tickets/recent.json
     var authString = `${process.env.ZDUserName}:${process.env.ZDPassword}`; 
     var cipherString = Buffer.from(authString).toString('base64');
     var finalAuthString = `Basic ${cipherString}`;
@@ -54,7 +58,6 @@ function callZenDesk(res){
 }
 
 router.get('/tickets', function (req, res) {
-    //res.render('tickets');
     callZenDesk(res);
 });
 
