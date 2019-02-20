@@ -2,63 +2,28 @@ require('dotenv').config();
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var shipStationAPI = require('../apis/shipstation');
+var zendeskAPI = require('../apis/zendesk');
 
 router.get('/', function (req, res) {
     res.render('index');
 });
 
-
-router.get('/', function (req, res) {
-  res.render('index');
-});
-
-
-function callShipStation(res ,cb){
-    var authString = `${process.env.SSAPIKey}:${process.env.SSAPISecret}`; 
-    var cipherString = Buffer.from(authString).toString('base64');
-    var finalAuthString = `Basic ${cipherString}`;
-    var options = {
-        url: 'https://ssapi.shipstation.com/orders?createDateStart=2019-02-18%2023:59:59',
-        headers: {
-          Authorization: finalAuthString 
-        }
-      };
-      function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          var info = JSON.parse(body);
-          console.log(info);
-          res.render('shipments', info);
-        }
-      }
-      request(options, callback);
-}
-
 router.get('/shipments', function (req, res) {
-    callShipStation(res);
-});
+  var today = new Date().toISOString().split("T")[0];
+  var reqParams = {
+    'createDateStart': `${today}%2000:00:00`,
+    'warehouse': 227247,
+  }
 
-function callZenDesk(res){
-    var authString = `${process.env.ZDUserName}:${process.env.ZDPassword}`; 
-    var cipherString = Buffer.from(authString).toString('base64');
-    var finalAuthString = `Basic ${cipherString}`;
-    var options = {
-        url: 'https://clearlyfiltered.zendesk.com/api/v2/tickets.json',
-        headers: {
-          Authorization: finalAuthString 
-        }
-      };
-      function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          var info = JSON.parse(body);
-          console.log(info);
-          res.render('tickets', info);
-        }
-      }
-      request(options, callback);
-}
+  shipStationAPI.get('shipments',reqParams, function(data){
+    res.render('shipments', data);
+  });
+});
 
 router.get('/tickets', function (req, res) {
-    callZenDesk(res);
+    //callZenDesk(res);
+    zendeskAPI.tickets.get(res);
 });
 
 module.exports = router;
