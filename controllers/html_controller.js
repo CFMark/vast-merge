@@ -9,9 +9,11 @@ router.get('/', function (req, res) {
   res.render('index');
 });
 
-router.get('/shipments', function (req, res) {
-  //var date = req.params.date;
+router.get('/shipments/', function (req, res) {
+  var date = req.params.date;
+
   var today = new Date().toISOString().split("T")[0];
+
   var reqParams = {
     'shipDateStart': `${today}%2000:00:00`,
     'includeShipmentItems': true,
@@ -21,7 +23,9 @@ router.get('/shipments', function (req, res) {
     var shipments = {
       shipments: [],
       lineItems: [],
-      counts: {}
+      counts: {},
+      countsArr: []
+      
     };
 
     for (var i = 0; i < data.shipments.length; i++) {
@@ -60,10 +64,20 @@ router.get('/shipments', function (req, res) {
       } else {
         shipments.counts[shipSKUName] += 1;
       }
-      
+    }
+
+    var countKeys = Object.keys(shipments.counts);
+    for(var i = 0; i < countKeys.length; i++){
+      var newCount = {
+        name: countKeys[i],
+        qty: shipments.counts[countKeys[i]]
+      };
+      shipments.countsArr.push(newCount);
     }
 
     console.log(shipments.counts);
+    console.log(shipments.countsArr);
+
 
     res.render('shipments', shipments);
   });

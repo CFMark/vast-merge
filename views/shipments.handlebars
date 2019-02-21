@@ -1,5 +1,25 @@
 <p>Total Shipments sent via Mobile: {{shipments.length}}</p>
 <p>Total line items: {{lineItems.length}}</p>
+
+<h5>Count Table</h5>
+<table>
+    <thead>
+        <tr>
+            <th>Shipping SKU</th>
+            <th>Shipping QTY</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each countsArr}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{qty}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h5>Shipment Manifest Table</h5>
 <table>
     <thead>
         <tr>
