@@ -20,7 +20,8 @@ router.get('/shipments', function (req, res) {
   shipStationAPI.get('shipments', reqParams, function (data) {
     var shipments = {
       shipments: [],
-      lineItems: []
+      lineItems: [],
+      counts: {}
     };
 
     for (var i = 0; i < data.shipments.length; i++) {
@@ -47,13 +48,23 @@ router.get('/shipments', function (req, res) {
             shipments.lineItems.push(newlineItem);
           }
         }
-
-
       }
     }
 
-    //console.log(shipments);
-    //console.log(shipments.lineItems);
+    for(var i = 0; i < shipments.lineItems.length; i++){
+      var countKeys = Object.keys(shipments.counts);
+      var shipSKUName = `${shipments.lineItems[i].productName}x${shipments.lineItems[i].productQty}`;
+      var exists = countKeys.indexOf(shipSKUName);
+      if(exists<0){
+        shipments.counts[shipSKUName] = 1;
+      } else {
+        shipments.counts[shipSKUName] += 1;
+      }
+      
+    }
+
+    console.log(shipments.counts);
+
     res.render('shipments', shipments);
   });
 });
