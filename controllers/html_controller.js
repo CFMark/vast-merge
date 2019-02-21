@@ -6,7 +6,7 @@ var zendeskAPI = require('../apis/zendesk');
 var names = require('../logic/normalize_name');
 
 router.get('/', function (req, res) {
-    res.render('index');
+  res.render('index');
 });
 
 router.get('/shipments', function (req, res) {
@@ -17,34 +17,25 @@ router.get('/shipments', function (req, res) {
     'includeShipmentItems': true,
   }
 
-  shipStationAPI.get('shipments',reqParams, function(data){
-    var shipments ={
+  shipStationAPI.get('shipments', reqParams, function (data) {
+    var shipments = {
       shipments: [],
       lineItems: []
     };
-    var lineItems = {lineItems: []};
 
-    for(var i=0; i<data.shipments.length; i++){
+    for (var i = 0; i < data.shipments.length; i++) {
       var shipment = data.shipments[i];
-      if( shipment.advancedOptions.storeId !== 172911 && shipment.warehouseId === 227247 && shipment.isReturnLabel === false){
+      if (shipment.advancedOptions.storeId !== 172911 && shipment.warehouseId === 227247 && shipment.isReturnLabel === false) {
         shipments.shipments.push(data.shipments[i]);
         var orderNumber = shipment.orderNumber;
         var customerEmail = shipment.customerEmail;
         var recipientName = shipment.shipTo.name;
         var newlineItem, name;
-        if(shipment.shipmentItems.length === 0){
-          name = names.normalize(shipment.shipmentItems[0].name);
-          newlineItem = {
-            orderNumber: orderNumber,
-            customerEmail: customerEmail,
-            recipientName: recipientName,
-            productName: name,
-            productQty: shipment.shipmentItems[0].quantity
-          };
-          console.log("condition valid!!!")
-          shipments.lineItems.push(newlineItem);
-        } else {
-          for(var j = 0; j<shipment.shipmentItems.length; j++){
+
+        for (var j = 0; j < shipment.shipmentItems.length; j++) {
+          if(shipment.shipmentItems[j].options !== null && shipment.shipmentItems[j].options[0].name === 'charge_delay' && shipment.shipmentItems[j].unitPrice === 0){
+            console.log('subscription only');
+          } else {
             name = names.normalize(shipment.shipmentItems[j].name);
             newlineItem = {
               orderNumber: orderNumber,
@@ -57,6 +48,7 @@ router.get('/shipments', function (req, res) {
           }
         }
 
+
       }
     }
 
@@ -67,8 +59,8 @@ router.get('/shipments', function (req, res) {
 });
 
 router.get('/tickets', function (req, res) {
-    //callZenDesk(res);
-    zendeskAPI.tickets.get(res);
+  //callZenDesk(res);
+  zendeskAPI.tickets.get(res);
 });
 
 module.exports = router;
