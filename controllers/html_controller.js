@@ -10,14 +10,23 @@ router.get('/', function (req, res) {
 });
 
 router.get('/shipments', function (req, res) {
+  //var date = req.params.date;
   var today = new Date().toISOString().split("T")[0];
   var reqParams = {
-    'createDateStart': `${today}%2000:00:00`,
-    'warehouse': 227247,
+    'shipDateStart': `${today}%2000:00:00`,
+    'includeShipmentItems': true,
   }
 
   shipStationAPI.get('shipments',reqParams, function(data){
-    res.render('shipments', data);
+    var shipments ={shipments: []};
+    for(var i=0; i<data.shipments.length; i++){
+      var shipment = data.shipments[i];
+      if( shipment.advancedOptions.storeId !== 172911 && shipment.warehouseId === 227247 && shipment.isReturnLabel === false){
+        shipments.shipments.push(data.shipments[i]);
+      }
+    }
+    //console.log(shipments);
+    res.render('shipments', shipments);
   });
 });
 

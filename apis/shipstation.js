@@ -14,6 +14,7 @@ var shipStationAPI = {
             }
             url += newParam;
         }
+        console.log(url);
         var options = {
             url: url,
             headers: {
