@@ -1,3 +1,21 @@
 body{
     font-family: 'Roboto', sans-serif;
 }
+table{
+    
+    margin-right:auto;
+    margin-left:auto;
+    width:95%;
+    border: solid black 1px;
+    border-collapse: separate !important;
+}
+
+tr:hover{
+    padding:1rem;
+    color: white;
+    background-color: #34baeb;
+    font-weight: 500;
+}
+th, td{
+    border-radius: 0px;
+}
